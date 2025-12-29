@@ -3,23 +3,36 @@ package com.example.expensetracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.expensetracker.screens.home.HomeScreen
+ import com.example.expensetracker.screens.add.AddExpenseScreen
 import com.example.expensetracker.ui.theme.ExpenseTrackerTheme
 
+/**
+ * MainActivity - App ka entry point
+ * Yahan se app start hoti hai
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ExpenseTrackerTheme {
 
+        // setContent = Screen set karna
+        setContent {
+            // Theme wrap - App ka theme apply hota hai
+            ExpenseTrackerTheme {
+                // Surface = Background container
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+
+
+                    HomeScreen()
+//                     AddExpenseScreen()
+                }
             }
         }
     }

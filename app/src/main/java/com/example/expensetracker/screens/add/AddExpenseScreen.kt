@@ -1,535 +1,241 @@
 package com.example.expensetracker.screens.add
 
-// Background aur layout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-
-// TextField ke liye
 import androidx.compose.foundation.text.KeyboardOptions
-
-// Icons - Har icon individually import hota hai
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.ShoppingCart
-
-// Material Design 3 components
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-
-// State management (remember, mutableStateOf)
 import androidx.compose.runtime.*
-
-// UI arrangement
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
-// Colors aur styling
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Custom colors (Figma wale)
-import com.example.expensetracker.ui.theme.*
-
-
-// ═══════════════════════════════════════════════════════════════
-// MAIN ADD EXPENSE SCREEN
-// ═══════════════════════════════════════════════════════════════
-
-@OptIn(ExperimentalMaterial3Api::class)  // TextField experimental feature hai
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseScreen() {
 
-    // ──────────────────────────────────────────────
-    // STATE VARIABLES (Remember + MutableState)
-    // ──────────────────────────────────────────────
+    var amount by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("Food") }
+    var description by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf("10/12/2025") }
 
+    val background = Color(0xFF0F1C24)
+    val cardBg = Color(0xFF1C2B34)
+    val accent = Color(0xFF1EB1FC)
+    val textGray = Color(0xFF8A9BA8)
+    val textWhite = Color.White
 
-    var amount by remember { mutableStateOf("") }                    // Amount input (empty string se start)
-    var selectedCategory by remember { mutableStateOf("Food") }      // Selected category (default: Food)
-    var description by remember { mutableStateOf("") }               // Description input (optional)
-    var selectedDate by remember { mutableStateOf("10/12/2025") }    // Selected date (dummy date)
-
-
-    // ──────────────────────────────────────────────
-    // MAIN CONTAINER
-    // ──────────────────────────────────────────────
     Column(
         modifier = Modifier
-            .fillMaxSize()              // Puri screen
-            .background(AppBackground)  // Dark background: #101C22
-            .padding(16.dp)             // Charo taraf padding
+            .fillMaxSize()
+            .background(background)
+            .padding(16.dp)
     ) {
-        // Top bar with Cancel button aur title
-        TopBar()
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Amount input section (₹0.00)
-        AmountInputSection(
-            amount = amount,
-            onAmountChange = { amount = it }  // Jab user type kare, amount update ho
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Category selection (Food, Transport, etc.)
-        CategorySection(
-            selectedCategory = selectedCategory,
-            onCategorySelect = { selectedCategory = it }  // Jab user click kare, category update ho
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Description input (optional text)
-        DescriptionSection(
-            description = description,
-            onDescriptionChange = { description = it }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Date picker
-        DateSection(
-            selectedDate = selectedDate,
-            onDateChange = { selectedDate = it }
-        )
-
-        // Spacer with weight - Remaining space le lega aur button ko bottom mein push karega
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Save button (bottom pe fixed)
-        SaveButton(
-            onClick = {
-                // TODO: Session 4 mein database mein save karenge
-                println("Amount: $amount, Category: $selectedCategory, Description: $description")
-            }
-        )
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// TOP BAR (Cancel button + Title)
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun TopBar() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,  // Items ko spread karo
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // ──── Left: Cancel button ────
-        TextButton(onClick = {
-            // TODO: Session 4 mein navigation back karenge
-        }) {
-            Text(
-                text = "Cancel",
-                color = AccentCyan,  // Bright cyan: #14FFEC
-                fontSize = 16.sp
-            )
+        // Top Bar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.height(18.dp))
+            Text("Cancel", color = accent, fontSize = 16.sp)
+            Text("New Expense", color = textWhite, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.width(48.dp))
         }
 
-        // ──── Center: Title ────
-        Text(
-            text = "New Expense",
-            color = TextWhite,
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Amount
+        Text("ENTER AMOUNT",
+            color = textGray,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        // ──── Right: Empty space (layout balance ke liye) ────
-        Spacer(modifier = Modifier.width(60.dp))
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// AMOUNT INPUT SECTION
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * @param amount - Current amount value (state variable se)
- * @param onAmountChange - Callback function jab user type kare
- */
-@Composable
-fun AmountInputSection(
-    amount: String,
-    onAmountChange: (String) -> Unit  // Higher-order function (function as parameter)
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally  // Center mein rakho
-    ) {
-        // ──── Label: "ENTER AMOUNT" ────
-        Text(
-            text = "ENTER AMOUNT",
-            color = TextGray,
-            fontSize = 12.sp,
-            letterSpacing = 1.sp  // Letters ke beech space
-        )
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // ──── Row: ₹ symbol + TextField ────
         Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Rupee symbol (₹)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "₹",
-                color = TextGray,
-                fontSize = 48.sp,       // Very large font
+                color = textGray.copy(alpha = 0.8f),
+                fontSize = 48.sp,
                 fontWeight = FontWeight.Light
             )
 
-            // ──── TextField for number input ────
             TextField(
-                value = amount,              // Current value
-                onValueChange = onAmountChange,  // Jab user type kare toh ye function call hoga
+                value = amount,
+                onValueChange = { amount = it },
                 textStyle = LocalTextStyle.current.copy(
-                    fontSize = 48.sp,        // Large font size
-                    fontWeight = FontWeight.Light,
-                    color = TextWhite,       // White text
-                    textAlign = TextAlign.Start
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number  // Number keyboard dikhega (0-9)
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = textWhite,
+                    textAlign = TextAlign.Center
                 ),
                 placeholder = {
-                    // Placeholder = Empty field mein dikhne wala text
                     Text(
-                        text = "0.00",
+                        "0.00",
                         fontSize = 48.sp,
-                        color = TextGray
+                        color = textGray.copy(alpha = 0.6f),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                 },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.colors(
-                    // Transparent background (border nahi chahiye)
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    // No underline indicator
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = accent
                 ),
-                modifier = Modifier.width(200.dp)  // Fixed width
+                modifier = Modifier.width(200.dp)
             )
         }
-    }
-}
-// ═══════════════════════════════════════════════════════════════
-// CATEGORY SELECTION SECTION
-// ═══════════════════════════════════════════════════════════════
 
-/**
- * CategorySection - User yahan category select karega
- * @param selectedCategory - Currently selected category
- * @param onCategorySelect - Callback jab user category click kare
- */
-@Composable
-fun CategorySection(
-    selectedCategory: String,
-    onCategorySelect: (String) -> Unit
-) {
-    Column {
-        // ──── Section title ────
-        Text(
-            text = "Category",
-            color = TextWhite,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Category
+        Text("Category", color = textWhite, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        val categories = listOf(
+            Triple("Food", Icons.Default.Face, accent),
+            Triple("Transport", Icons.Default.Place, accent),
+            Triple("Shopping", Icons.Default.ShoppingCart, accent),
+            Triple("Bills", Icons.Default.AccountBox, accent),
+            Triple("Fun", Icons.Default.Face, accent),
+            Triple("Health", Icons.Default.Favorite, accent)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // ──── Row 1: Food, Transport, Shopping ────
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly  // Equal space mein distribute karo
-        ) {
-            CategoryItem(
-                title = "Food",
-                icon = Icons.Default.Face,
-                isSelected = selectedCategory == "Food",      // Agar selected hai toh true
-                onClick = { onCategorySelect("Food") }
-            )
-            CategoryItem(
-                title = "Transport",
-                icon = Icons.Default.Place,
-                isSelected = selectedCategory == "Transport",
-                onClick = { onCategorySelect("Transport") }
-            )
-            CategoryItem(
-                title = "Shopping",
-                icon = Icons.Default.ShoppingCart,
-                isSelected = selectedCategory == "Shopping",
-                onClick = { onCategorySelect("Shopping") }
-            )
+        Column {
+            categories.chunked(3).forEach { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    row.forEach { (title, icon, color) ->
+                        CategoryItem(
+                            title = title,
+                            icon = icon,
+                            selected = selectedCategory == title,
+                            onClick = { selectedCategory = title },
+                            cardBg = cardBg,
+                            accent = color,
+                            textGray = textGray
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // ──── Row 2: Bills, Fun, Health ────
+        // Description
+        Text("Description", color = textWhite, fontSize = 18.sp)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            placeholder = {
+                Text("What is this for?", color = textGray) },
+            leadingIcon = { Icon(Icons.Default.Edit, null, tint = textGray) },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = cardBg,
+                unfocusedContainerColor = cardBg,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = textWhite,        
+                unfocusedTextColor = textWhite,
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Date
+        Text("Date", color = textWhite, fontSize = 18.sp)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(cardBg, RoundedCornerShape(12.dp))
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            CategoryItem(
-                title = "Bills",
-                icon = Icons.Default.AccountBox,
-                isSelected = selectedCategory == "Bills",
-                onClick = { onCategorySelect("Bills") }
-            )
-            CategoryItem(
-                title = "Fun",
-                icon = Icons.Default.Face,
-                isSelected = selectedCategory == "Fun",
-                onClick = { onCategorySelect("Fun") }
-            )
-            CategoryItem(
-                title = "Health",
-                icon = Icons.Default.Favorite,
-                isSelected = selectedCategory == "Health",
-                onClick = { onCategorySelect("Health") }
-            )
+            Icon(Icons.Default.DateRange, null, tint = textGray)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(selectedDate, color = textWhite)
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Save Button
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = accent),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Icon(Icons.Default.Check, null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Save Expense", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
-// ═══════════════════════════════════════════════════════════════
-// SINGLE CATEGORY ITEM (Reusable Component)
-// ═══════════════════════════════════════════════════════════════
 
-/**
- * CategoryItem - Ek single category button
- * @param title - Category name (e.g., "Food")
- * @param icon - Icon to display
- * @param isSelected - Boolean: Is this category currently selected?
- * @param onClick - Callback jab user click kare
- */
 @Composable
 fun CategoryItem(
     title: String,
     icon: ImageVector,
-    isSelected: Boolean,
-    onClick: () -> Unit  // Lambda function (no parameters)
+    selected: Boolean,
+    onClick: () -> Unit,
+    cardBg: Color,
+    accent: Color,
+    textGray: Color
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clickable(onClick = onClick)  // Clickable banao
-            .padding(8.dp)
-    ) {
-        // ──── Icon container with conditional styling ────
-        Box(
-            modifier = Modifier
-                .size(64.dp)  // 64x64 dp square
-                .background(
-                    // Conditional background color:
-                    // Selected: Dark blue (#094C6E)
-                    // Not selected: Card background (#1C2932)
-                    color = if (isSelected) GradientBlue2 else CardBackground,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .border(
-                    // Conditional border:
-                    // Selected: 2dp cyan border
-                    // Not selected: No border
-                    width = if (isSelected) 2.dp else 0.dp,
-                    color = if (isSelected) AccentCyan else Color.Transparent,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            contentAlignment = Alignment.Center  // Icon ko center mein
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,  // Accessibility
-                tint = TextWhite,
-                modifier = Modifier.size(32.dp)
+            .size(100.dp)
+            .background(cardBg, RoundedCornerShape(16.dp))
+            .border(
+                width = if (selected) 2.dp else 0.dp,
+                color = if (selected) accent else Color.Transparent,
+                shape = RoundedCornerShape(16.dp)
             )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // ──── Category name ────
-        Text(
-            text = title,
-            // Conditional text color:
-            // Selected: Cyan
-            // Not selected: Gray
-            color = if (isSelected) AccentCyan else TextGray,
-            fontSize = 12.sp
-        )
-    }
-}
-// ═══════════════════════════════════════════════════════════════
-// DESCRIPTION INPUT SECTION
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * DescriptionSection - Optional text input
- * User yahan note likh sakta hai (e.g., "Lunch with friends")
- * @param description - Current description text
- * @param onDescriptionChange - Callback jab user type kare
- */
-@Composable
-fun DescriptionSection(
-    description: String,
-    onDescriptionChange: (String) -> Unit
-) {
-    Column {
-        // Section title
-        Text(
-            text = "Description",
-            color = TextWhite,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // ──── TextField with icon placeholder ────
-        TextField(
-            value = description,
-            onValueChange = onDescriptionChange,
-            placeholder = {
-                // Placeholder mein icon + text dono
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = TextGray,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "What is this for?",
-                        color = TextGray
-                    )
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = CardBackground,    // Dark card background
-                unfocusedContainerColor = CardBackground,
-                focusedIndicatorColor = Color.Transparent,  // No underline
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedTextColor = TextWhite,
-                unfocusedTextColor = TextWhite
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-// ═══════════════════════════════════════════════════════════════
-// DATE SELECTION SECTION
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * DateSection - Date picker button
- * @param selectedDate - Currently selected date
- * @param onDateChange - Callback jab date change ho
- */
-@Composable
-fun DateSection(
-    selectedDate: String,
-    onDateChange: (String) -> Unit
-) {
-    Column {
-        // Section title
-        Text(
-            text = "Date",
-            color = TextWhite,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // ──── Date picker card (clickable) ────
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    // TODO: Session 4 mein date picker dialog open karenge
-                },
-            colors = CardDefaults.cardColors(
-                containerColor = CardBackground  // Dark card: #1C2932
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Calendar icon
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Select Date",
-                    tint = AccentCyan,  // Cyan color
-                    modifier = Modifier.size(24.dp)
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Selected date text
-                Text(
-                    text = selectedDate,
-                    color = TextWhite,
-                    fontSize = 16.sp
-                )
-            }
-        }
-    }
-}
-
-
-// ═══════════════════════════════════════════════════════════════
-// SAVE BUTTON (Bottom)
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * SaveButton - Large button at bottom
- * @param onClick - Callback jab button click ho
- */
-@Composable
-fun SaveButton(onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()      // Puri width
-            .height(56.dp),      // Fixed height (large button)
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AccentCyan  // Bright cyan: #14FFEC
-        ),
-        shape = RoundedCornerShape(12.dp)
+            .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        // Button ke andar icon + text
-        Icon(
-            imageVector = Icons.Default.Check,  // Checkmark icon
-            contentDescription = "Save",
-            tint = GradientBlue2  // Dark blue
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Save Expense",
-            color = GradientBlue2,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Icon(icon, null, tint = if (selected) accent else textGray)
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(title, color = if (selected) accent else textGray, fontSize = 12.sp)
     }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun AddExpenseScreenPreview() {
+    AddExpenseScreen()
 }

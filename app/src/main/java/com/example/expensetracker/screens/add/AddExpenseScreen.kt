@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreen() {
+fun AddExpenseScreen(onCancel: () -> Unit) {
 
     var amount by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Food") }
@@ -50,7 +50,7 @@ fun AddExpenseScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.height(18.dp))
-            Text("Cancel", color = accent, fontSize = 16.sp)
+            Text("Cancel", color = accent, fontSize = 16.sp,modifier = Modifier.clickable { onCancel() })
             Text("New Expense", color = textWhite, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.width(48.dp))
         }
@@ -233,9 +233,4 @@ fun CategoryItem(
         Spacer(modifier = Modifier.height(6.dp))
         Text(title, color = if (selected) accent else textGray, fontSize = 12.sp)
     }
-}
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AddExpenseScreenPreview() {
-    AddExpenseScreen()
 }

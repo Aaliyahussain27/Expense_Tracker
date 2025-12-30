@@ -33,18 +33,37 @@ val GradientBlue2 = Color(0xFF0A84FF)
 
 // -------------------- Home Screen --------------------
 @Composable
-fun HomeScreen() {
-    Column(
+fun HomeScreen(onNavigate: () -> Unit) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
             .padding(16.dp)
     ) {
-        WelcomeSection()
-        Spacer(modifier = Modifier.height(24.dp))
-        ExpenseSummarySection()
-        Spacer(modifier = Modifier.height(24.dp))
-        RecentTransactionsSection()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 60.dp) // space for button
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+            WelcomeSection()
+            Spacer(modifier = Modifier.height(24.dp))
+            ExpenseSummarySection()
+            Spacer(modifier = Modifier.height(24.dp))
+            RecentTransactionsSection()
+        }
+
+        Button(
+            onClick = onNavigate,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1193D4)
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            Text("Add Expense")
+        }
     }
 }
 
@@ -295,10 +314,4 @@ fun getDummyTransactions(): List<Transaction> {
         Transaction("Phone Bill", "Monday 8:09am", "-₹299", Icons.Default.Phone),
         Transaction("Health", "Sunday 8:09am", "-₹550", Icons.Default.Favorite)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Prac(){
-    HomeScreen()
 }

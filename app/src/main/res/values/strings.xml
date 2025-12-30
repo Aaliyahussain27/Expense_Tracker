@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Expense Tracker</string>
+    <string name="widget_description">Track your daily and monthly expenses</string>
 </resources>

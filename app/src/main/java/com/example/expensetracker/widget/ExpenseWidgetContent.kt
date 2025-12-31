@@ -8,6 +8,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
@@ -18,7 +20,9 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.example.expensetracker.MainActivity
-
+import com.example.expensetracker.R
+import java.text.NumberFormat
+import java.util.Locale
 @SuppressLint("RestrictedApi")
 @Composable
 fun ExpenseWidgetContent(
@@ -31,23 +35,22 @@ fun ExpenseWidgetContent(
             .fillMaxSize()
             .background(ColorProvider(Color(0xFF0F1C24)))
             .cornerRadius(24.dp)
-            .padding(12.dp),
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         WalletCard(
             title = "Today's Expense",
             amount = todayExpense,
-            stripColor = Color(0xFF1F7388),
+            gradientDrawable = R.drawable.gradient_expense,
             context = context
         )
 
-        Spacer(modifier = GlanceModifier.height(12.dp))
+        Spacer(modifier = GlanceModifier.height(16.dp))
 
         WalletCard(
-            title = "Monthly Expense",
+            title = "This Month's Expense",
             amount = monthExpense,
-            stripColor = Color(0xFF18426E),
+            gradientDrawable = R.drawable.gradient_expense,
             context = context
         )
     }
@@ -58,55 +61,76 @@ fun ExpenseWidgetContent(
 private fun WalletCard(
     title: String,
     amount: Double,
-    stripColor: Color,
+    gradientDrawable: Int,
     context: Context
 ) {
+    val formatter = NumberFormat.getNumberInstance(Locale("en", "IN"))
+
+    // Outer Box: stroke background
     Box(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .height(130.dp)
-            .background(ColorProvider(Color(0xFF1C2B34)))
-            .cornerRadius(20.dp)
-            .clickable(
-                actionStartActivity(
-                    Intent(context, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                )
-            )
+            .background(ImageProvider(R.drawable.widget_card_stroke))
+            .padding(2.dp)
     ) {
-        Column {
-
-            // 🔵 Top wallet strip
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .background(ColorProvider(stripColor))
-                    .cornerRadius(20.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        color = ColorProvider(Color.White),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = GlanceModifier.padding(start = 16.dp)
-                )
-            }
-
-            Spacer(modifier = GlanceModifier.height(12.dp))
-
-            Column(modifier = GlanceModifier.padding(start = 16.dp)) {
-                Text(
-                    text = "-₹${"%.0f".format(amount)}",
-                    style = TextStyle(
-                        color = ColorProvider(Color.White),
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold
+        // Inner Box: main card content
+        Box(
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .cornerRadius(18.dp) // slightly smaller than outer stroke corners
+                .background(ColorProvider(Color(0xFF1C2B34)))
+                .clickable(
+                    actionStartActivity(
+                        Intent(context, MainActivity::class.java)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     )
                 )
+        ) {
+            Column(
+                modifier = GlanceModifier.fillMaxWidth()
+            ) {
+                // Top colored strip with gradient
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(42.dp)
+                        .background(ImageProvider(gradientDrawable)),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Row(
+                        modifier = GlanceModifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = title,
+                            style = TextStyle(
+                                color = ColorProvider(Color.White),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                }
+
+                // Amount section
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .background(ImageProvider(R.drawable.gradient_amount))
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 16.dp)
+                ) {
+                    Text(
+                        text = "₹${formatter.format(amount)}",
+                        style = TextStyle(
+                            color = ColorProvider(Color.White),
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
             }
         }
     }

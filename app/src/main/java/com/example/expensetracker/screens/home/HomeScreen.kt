@@ -10,8 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +33,7 @@ val GradientBlue2 = Color(0xFF0A84FF)
 
 // -------------------- Home Screen --------------------
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel,
-    onNavigate: () -> Unit) {
-
-    val budget by viewModel.budget.collectAsState()
-
+fun HomeScreen(onNavigate: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,10 +46,7 @@ fun HomeScreen(
                 .padding(bottom = 60.dp) // space for button
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            WelcomeSection(
-                budget = budget,
-                onAddMoney = { viewModel.updateBudget(it) }
-            )
+            WelcomeSection()
             Spacer(modifier = Modifier.height(24.dp))
             ExpenseSummarySection()
             Spacer(modifier = Modifier.height(24.dp))
@@ -79,10 +69,7 @@ fun HomeScreen(
 
 // -------------------- Welcome Section --------------------
 @Composable
-fun WelcomeSection(
-    budget: Int,
-    onAddMoney: (Int) -> Unit
-) {
+fun WelcomeSection() {
     Column {
         Text(
             text = "WELCOME BACK",
@@ -131,7 +118,7 @@ fun WelcomeSection(
                             fontSize = 14.sp
                         )
                         Text(
-                            text = "₹$budget",
+                            text = "₹10,000.00",
                             color = TextWhite,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
@@ -139,7 +126,7 @@ fun WelcomeSection(
                     }
 
                     Button(
-                        onClick = { onAddMoney(budget) },
+                        onClick = { /* TODO */ },
                         colors = ButtonDefaults.buttonColors(containerColor = TextWhite),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)

@@ -42,6 +42,7 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
             .background(background)
             .padding(16.dp)
     ) {
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Top Bar
         Row(

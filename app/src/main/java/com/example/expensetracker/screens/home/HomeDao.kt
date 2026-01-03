@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HomeDao {
 
+    //transactions
     @Insert
     suspend fun insertTransaction(transaction: HomeEntity)
 
@@ -19,4 +20,15 @@ interface HomeDao {
 
     @Query("SELECT SUM(CAST(REPLACE(amount,'₹','') AS REAL)) FROM home_transactions")
     fun getMonthlyTotal(): Flow<Double?>
+
+    //budget
+    @Query("SELECT amount FROM budget WHERE id = 1")
+    fun getBudget(): Flow<Int?>
+
+    @Insert
+    suspend fun insertBudget(budget: BudgetEntity)
+
+    @Query("UPDATE budget SET amount = :amount WHERE id = 1")
+    suspend fun updateBudget(amount: Int)
+
 }

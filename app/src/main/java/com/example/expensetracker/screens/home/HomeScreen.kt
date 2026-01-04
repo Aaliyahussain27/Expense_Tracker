@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Wallet
 
 // -------------------- Colors --------------------
 val Background = Color(0xFF0F1C24)
@@ -54,22 +56,36 @@ fun HomeScreen(onNavigate: () -> Unit) {
             RecentTransactionsSection()
         }
 
-        Icon(
-            imageVector = Icons.Default.Home,
-            contentDescription = "Home")
-
-        FloatingActionButton(
-            onClick = onNavigate,
-            containerColor = Color(0xFF1193D4),
-            modifier = Modifier.align(Alignment.BottomCenter),
-            shape = CircleShape
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(56.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = Color.White
-            )
+
+            Icon(Icons.Default.Home, null, tint = TextGray, modifier = Modifier.size(26.dp))
+
+            Icon(Icons.Filled.Wallet, null, tint = TextGray, modifier = Modifier.size(26.dp))
+
+            FloatingActionButton(
+                onClick = onNavigate,
+                containerColor = Color(0xFF1193D4),
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add",
+                    tint = Color.White
+                )
+            }
+
+            Icon(Icons.Default.Star, null, tint = TextGray, modifier = Modifier.size(26.dp))
+
+            Icon(Icons.Default.Person, null, tint = TextGray, modifier = Modifier.size(26.dp))
         }
+
     }
 }
 

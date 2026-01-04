@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 // -------------------- Colors --------------------
 val Background = Color(0xFF0F1C24)
@@ -36,7 +38,10 @@ val GradientBlue2 = Color(0xFF0A84FF)
 
 // -------------------- Home Screen --------------------
 @Composable
-fun HomeScreen(onNavigate: () -> Unit) {
+fun HomeScreen(viewModel: HomeScreenViewModel, onNavigate: () -> Unit) {
+    val transactions by viewModel.expenses.collectAsState()
+    val todayTotal by viewModel.todayTotal.collectAsState()
+    val monthlyTotal by viewModel.monthlyTotal.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,9 +56,9 @@ fun HomeScreen(onNavigate: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
             WelcomeSection()
             Spacer(modifier = Modifier.height(24.dp))
-            ExpenseSummarySection()
+            ExpenseSummarySection(todayTotal, monthlyTotal)
             Spacer(modifier = Modifier.height(24.dp))
-            RecentTransactionsSection()
+            RecentTransactionsSection(transactions)
         }
 
         Row(
@@ -85,7 +90,6 @@ fun HomeScreen(onNavigate: () -> Unit) {
 
             Icon(Icons.Default.Person, null, tint = TextGray, modifier = Modifier.size(26.dp))
         }
-
     }
 }
 
@@ -116,20 +120,20 @@ fun WelcomeSection() {
 
 // -------------------- Expense Section --------------------
 @Composable
-fun ExpenseSummarySection() {
+fun ExpenseSummarySection(todayTotal: Double, monthlyTotal: Double) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         ExpenseCard(
             title = "Today's Expense",
-            amount = "-₹740",
+            amount = "-₹${todayTotal.toInt()}",
             icon = Icons.Default.DateRange,
             modifier = Modifier.weight(1f)
         )
         ExpenseCard(
             title = "Monthly Expense",
-            amount = "-₹5,540",
+            amount = "-₹${monthlyTotal.toInt()}",
             icon = Icons.Default.DateRange,
             modifier = Modifier.weight(1f)
         )
@@ -177,7 +181,7 @@ fun ExpenseCard(
 
 // -------------------- Transactions Section --------------------
 @Composable
-fun RecentTransactionsSection() {
+fun RecentTransactionsSection(transactions: List<HomeTransactionUiModel>) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -198,7 +202,7 @@ fun RecentTransactionsSection() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
-            items(getDummyTransactions()) { transaction ->
+            items(transactions) { transaction ->
                 TransactionItem(transaction)
             }
         }
@@ -206,7 +210,8 @@ fun RecentTransactionsSection() {
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: HomeTransactionUiModel) {
+    val icon = mapCategoryToIcon(transaction.category)
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
@@ -226,7 +231,7 @@ fun TransactionItem(transaction: Transaction) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = transaction.icon,
+                    imageVector = icon,
                     contentDescription = null,
                     tint = TextWhite,
                     modifier = Modifier.size(24.dp)
@@ -262,19 +267,19 @@ fun TransactionItem(transaction: Transaction) {
 }
 
 // -------------------- Dummy Data --------------------
-data class Transaction(
-    val title: String,
-    val date: String,
-    val amount: String,
-    val icon: ImageVector
-)
-
-fun getDummyTransactions(): List<Transaction> {
-    return listOf(
-        Transaction("Lunch", "Friday 8:09am", "-₹740", Icons.Default.Face),
-        Transaction("Uber", "Wednesday 8:09am", "-₹340", Icons.Default.Place),
-        Transaction("Shopping", "Monday 8:09am", "-₹700", Icons.Default.ShoppingCart),
-        Transaction("Phone Bill", "Monday 8:09am", "-₹299", Icons.Default.Phone),
-        Transaction("Health", "Sunday 8:09am", "-₹550", Icons.Default.Favorite)
-    )
-}
+//data class Transaction(
+//    val title: String,
+//    val date: String,
+//    val amount: String,
+//    val icon: ImageVector
+//)
+//
+//fun getDummyTransactions(): List<Transaction> {
+//    return listOf(
+//        Transaction("Lunch", "Friday 8:09am", "-₹740", Icons.Default.Face),
+//        Transaction("Uber", "Wednesday 8:09am", "-₹340", Icons.Default.Place),
+//        Transaction("Shopping", "Monday 8:09am", "-₹700", Icons.Default.ShoppingCart),
+//        Transaction("Phone Bill", "Monday 8:09am", "-₹299", Icons.Default.Phone),
+//        Transaction("Health", "Sunday 8:09am", "-₹550", Icons.Default.Favorite)
+//    )
+//}

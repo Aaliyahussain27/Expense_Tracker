@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,16 +54,21 @@ fun HomeScreen(onNavigate: () -> Unit) {
             RecentTransactionsSection()
         }
 
-        Button(
+        Icon(
+            imageVector = Icons.Default.Home,
+            contentDescription = "Home")
+
+        FloatingActionButton(
             onClick = onNavigate,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1193D4)
-            ),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
+            containerColor = Color(0xFF1193D4),
+            modifier = Modifier.align(Alignment.BottomCenter),
+            shape = CircleShape
         ) {
-            Text("Add Expense")
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                tint = Color.White
+            )
         }
     }
 }
@@ -89,65 +95,6 @@ fun WelcomeSection() {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Budget Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(GradientBlue1, GradientBlue2)
-                        )
-                    )
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Total Budget",
-                            color = TextWhite,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "₹10,000.00",
-                            color = TextWhite,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Button(
-                        onClick = { /* TODO */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = TextWhite),
-                        shape = RoundedCornerShape(8.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            tint = GradientBlue2,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Add Money",
-                            color = GradientBlue2,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 

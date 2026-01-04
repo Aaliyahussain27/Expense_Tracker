@@ -20,6 +20,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.app.DatePickerDialog
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +34,6 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
     var amount by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Food") }
     var description by remember { mutableStateOf("") }
-    var selectedDate by remember { mutableStateOf("10/12/2025") }
 
     val background = Color(0xFF0F1C24)
     val cardBg = Color(0xFF1C2B34)
@@ -36,12 +41,30 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
     val textGray = Color(0xFF8A9BA8)
     val textWhite = Color.White
 
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    var selectedDate by remember {
+        mutableStateOf("Select Date")
+    }
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            selectedDate = "$dayOfMonth/${month + 1}/$year"
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(background)
             .padding(16.dp)
     ) {
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Top Bar
         Row(
@@ -107,7 +130,7 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Category
         Text("Category", color = textWhite, fontSize = 18.sp, fontWeight = FontWeight.Medium)
@@ -118,7 +141,7 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
             Triple("Food", Icons.Default.Face, accent),
             Triple("Transport", Icons.Default.Place, accent),
             Triple("Shopping", Icons.Default.ShoppingCart, accent),
-            Triple("Bills", Icons.Default.AccountBox, accent),
+            Triple("Bills", Icons.Default.List, accent),
             Triple("Fun", Icons.Default.Face, accent),
             Triple("Health", Icons.Default.Favorite, accent)
         )
@@ -145,7 +168,7 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Description
         Text("Description", color = textWhite, fontSize = 18.sp)
@@ -180,6 +203,7 @@ fun AddExpenseScreen(onCancel: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(cardBg, RoundedCornerShape(12.dp))
+                .clickable{ datePickerDialog.show() }
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
